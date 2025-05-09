@@ -15,6 +15,14 @@ contract ReadFromDynamicArray {
             // and return it
             // Assume `index` is <= to the length of readMe
             // Hint: https://www.rareskills.io/post/solidity-dynamic
+            let storageSlot := readMe.slot
+            // The keccak hash of the storage slot of readMe (i.e 0) points to the slot holding the first element,
+            // then we keep adding 1 to that value to get the storage locations of other indexes in the array
+            let slot := add(keccak256(storageSlot, 0x20), index)
+            // used the sload opcode to load the value from the slot.
+            let value := sload(slot)
+            mstore(0x00, value)
+            return(0x00, 0x20)
         }
     }
 }
